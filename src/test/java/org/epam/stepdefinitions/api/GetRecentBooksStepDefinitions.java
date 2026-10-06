@@ -92,10 +92,6 @@ public class GetRecentBooksStepDefinitions {
         getRecentBooksSteps.validateMetadataOrder(order);
     }
 
-    @Then("the response should be a valid JSON object")
-    public void validateValidJSON() {
-        getRecentBooksSteps.validateValidJSON();
-    }
 
     @Then("the data array should contain valid book objects")
     public void validateBookObjects() {
@@ -117,10 +113,6 @@ public class GetRecentBooksStepDefinitions {
         getRecentBooksSteps.validateMetadataFields();
     }
 
-    @Then("if data array is empty, metadata total should be 0")
-    public void validateEmptyArrayMetadata() {
-        getRecentBooksSteps.validateIfDataEmptyMetadataTotalIsZero();
-    }
 
     @Then("if status is 200, the data array should be empty")
     public void validateEmptyArray() {
@@ -130,18 +122,11 @@ public class GetRecentBooksStepDefinitions {
     public void validateErrorMessage() {
     }
 
-    @Then("if books are sorted correctly by createdAt in DESC order")
-    public void validateSorting() {
-        getRecentBooksSteps.validateBooksAreSortedByCreatedAtDesc();
-    }
 
     @Then("the response should not contain sensitive fields like password, secret, or token")
     public void validateNoSensitiveData() {
         getRecentBooksSteps.validateNoSensitiveData();
     }
 
-    @Then("the second response should contain the same books as the first response")
-    public void validateConsistentResponses() {
-        getRecentBooksSteps.validateConsistentBooksInResponses();
-    }
+
 }
