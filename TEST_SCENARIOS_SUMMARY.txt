@@ -1,0 +1,171 @@
+========================================================================
+BDD TEST AUTOMATION - GET RECENT BOOKS ENDPOINT
+Comprehensive Test Suite Summary
+========================================================================
+
+ENDPOINT: GET http://localhost:8080/api/v1/books/recent
+ACCEPT: application/json
+
+========================================================================
+TEST SCENARIOS (18 Total)
+========================================================================
+
+1. HAPPY PATH TEST
+   Scenario: Successfully retrieve recent books with default parameters
+   - Validates 200 status code
+   - Checks JSON content type
+   - Verifies response time < 5000ms
+   - Confirms data array exists
+   - Confirms metadata exists
+   - Validates required book fields
+
+2-5. QUERY PARAMETER: LIMIT VARIATIONS (4 Tests)
+   Scenario Outline: Retrieve recent books with limit parameter variations
+   Values: limit = 1, 5, 10, 20
+   - Status code: 200
+   - Metadata limit matches requested
+   - Data array size <= limit
+
+6-7. QUERY PARAMETER: SORT ORDER VARIATIONS (2 Tests)
+   Scenario Outline: Retrieve recent books with different sort orders
+   Values: order = DESC, ASC
+   - Status code: 200
+   - Metadata order matches requested
+   - Valid data array returned
+
+8-9. QUERY PARAMETER: SORTBY VARIATIONS (2 Tests)
+   Scenario Outline: Retrieve recent books with different sortBy parameters
+   Values: sortBy = createdAt, updatedAt
+   - Status code: 200
+   - Metadata sortBy matches requested
+
+10. RESPONSE STRUCTURE VALIDATION
+    Scenario: Validate response structure and data types
+    - Valid JSON object
+    - Data array contains valid books
+    - IDs are valid UUIDs
+    - ISBNs are numeric strings
+    - Timestamps in ISO 8601 format
+    - Metadata has correct types
+
+11. EMPTY RESULTS HANDLING
+    Scenario: Retrieve recent books with empty results
+    - Status code: 200
+    - Valid metadata structure
+    - If empty, total = 0
+
+12. LARGE LIMIT BOUNDARY
+    Scenario: Query parameter validation - Boundary testing with large limit
+    - Limit = 1000
+    - Status code: 200
+    - Data array size = non-negative integer
+
+13. ZERO LIMIT EDGE CASE
+    Scenario: Query parameter validation - Zero limit edge case
+    - Limit = 0
+    - Status: 200 or 400
+    - If 200: empty array
+    - If 400: error message
+
+14. NEGATIVE LIMIT EDGE CASE
+    Scenario: Query parameter validation - Negative limit edge case
+    - Limit = -1
+    - Status: 200 or 400
+    - If 400: error message
+
+15. METADATA CORRECTNESS
+    Scenario: Response contains metadata with correct values
+    - Limit = 5
+    - Verifies all metadata fields present
+    - Total >= 0
+    - Limit = requested limit
+    - SortBy = createdAt
+    - Order = DESC
+
+16. SORT ORDER VERIFICATION
+    Scenario: Books in response are sorted correctly by createdAt in DESC order
+    - If multiple books: each createdAt >= next createdAt
+
+17. MISSING PARAMETERS
+    Scenario: API handles missing query parameters gracefully
+    - Status: 200 or 400
+    - If 400: appropriate error message
+
+18. INVALID PARAMETERS
+    Scenario A: API handles invalid sortBy parameter
+    - Status: 200 or 400
+    - If 400: indicates invalid sortBy
+    
+    Scenario B: API handles invalid order parameter
+    - Status: 200 or 400
+    - If 400: indicates invalid order
+
+ADDITIONAL SCENARIOS (Bonus):
+- Accept header validation for JSON
+- Consistency check across multiple requests
+- No sensitive data exposure (password, secret, token, apiKey, privateKey)
+- Only expected fields in response
+
+========================================================================
+VALIDATION CATEGORIES
+========================================================================
+
+RESPONSE STATUS
+- 200 Success
+- 400 Bad Request (for invalid parameters)
+- Response time < 5000ms
+
+HEADERS
+- Content-Type: application/json
+
+RESPONSE STRUCTURE
+- data: array of book objects
+- metadata: object with total, limit, sortBy, order
+
+BOOK OBJECT FIELDS
+- id: string (UUID format)
+- isbn: string (numeric)
+- title: string
+- author: string
+- createdAt: string (ISO 8601 with timezone)
+- updatedAt: string (ISO 8601 with timezone)
+
+METADATA FIELDS
+- total: integer (>= 0)
+- limit: integer (>= requested limit)
+- sortBy: string (createdAt, updatedAt, etc.)
+- order: string (ASC, DESC)
+
+QUERY PARAMETERS
+- limit: integer (tested: 1, 5, 10, 20, 1000, 0, -1)
+- sortBy: string (tested: createdAt, updatedAt, invalidField)
+- order: string (tested: DESC, ASC, INVALID)
+
+========================================================================
+TEST EXECUTION
+========================================================================
+
+Command: ./gradlew test
+Report: build/reports/cucumber-report.html
+
+Test Framework: Cucumber 8.0.4 + RestAssured 6.0.1 + JUnit 5
+Glue Path: org/epam/stepdefinitions
+Base URI: http://localhost:8080
+
+========================================================================
+TEST FILES
+========================================================================
+
+Feature File:
+  src/test/resources/features/api/GetRecentBooks.feature
+
+Step Implementation:
+  src/test/java/org/epam/steps/api/GetRecentBooksSteps.java
+
+Step Definitions:
+  src/test/java/org/epam/stepdefinitions/api/GetRecentBooksStepDefinitions.java
+
+Documentation:
+  GET_RECENT_BOOKS_BDD_TESTS.md
+
+========================================================================
