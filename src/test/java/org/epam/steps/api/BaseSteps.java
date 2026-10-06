@@ -11,11 +11,11 @@ import java.util.Map;
 public class BaseSteps {
 
     private RequestSpecification buildRequest() {
-        return RestAssured.requestSpecification.baseUri("http://localhost:8080")
-                 .given()
-                 .log().all()
-                 .accept(ContentType.JSON)
-                 .contentType(ContentType.JSON);
+        return RestAssured.given()
+                .baseUri("http://localhost:8080")
+                .log().all()
+                .accept(ContentType.JSON)
+                .contentType(ContentType.JSON);
     }
 
     protected Response sendGetRequest(String endpoint, Map<String, String> headers, Map<String, String> pathParams, Map<String, String> queryParams) {
